@@ -1,0 +1,33 @@
+{
+  "active_persona": "Jiny",
+  "personas": {
+    "Jiny": {
+      "language": "Hindi",
+      "gender": "Female",
+      "avatar": "avatars/female.glb",
+      "edge_voice": "hi-IN-SwaraNeural",
+      "elevenlabs_id": "EXAVITQu4vr4xnSDxMaL"
+    },
+    "Era": {
+      "language": "Hindi",
+      "gender": "Female",
+      "avatar": "avatars/female.glb",
+      "edge_voice": "hi-IN-KavyaNeural",
+      "elevenlabs_id": "21m00Tcm4TlvDq8ikWAM"
+    },
+    "Shri": {
+      "language": "Marathi",
+      "gender": "Female",
+      "avatar": "avatars/female.glb",
+      "edge_voice": "mr-IN-AarohiNeural",
+      "elevenlabs_id": "AZnzlk1XvdvUeBnXmlld"
+    },
+    "Jarvis": {
+      "language": "Hindi",
+      "gender": "Male",
+      "avatar": "avatars/male.glb",
+      "edge_voice": "hi-IN-MadhurNeural",
+      "elevenlabs_id": "ErXwobaYiN019PkySvjV"
+    }
+  }
+}
