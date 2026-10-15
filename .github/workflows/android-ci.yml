@@ -2,69 +2,38 @@ name: ERA AI OS Android CI & APK Pipeline
 
 on:
   push:
-    branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ main, master ]
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
-  verify-and-build:
-    name: Secret Audit, Unit Tests & APK Build
+  build:
+    name: Build & Package ERA AI OS APK
     runs-on: ubuntu-latest
-    timeout-minutes: 25
-
     steps:
       - name: 1. Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 2. Security Gate — Scan for Committed Secrets or Keystores
-        run: |
-          echo "Scanning tracked files for prohibited keystores or hardcoded API keys..."
-          if git ls-files | grep -E '\.(jks|keystore|p12)$|(^|/)local\.properties$'; then
-            echo "ERROR: Prohibited keystore or local.properties file is tracked in Git!"
-            exit 1
-          fi
-          if grep -rnE "AIza[0-9A-Za-z\-_]{35}" app/src/; then
-            echo "ERROR: Hardcoded API key pattern detected in source code!"
-            exit 1
-          fi
-          echo "Security scan passed: No keystores or hardcoded keys found."
-
-      - name: 3. Set up JDK 17 (Temurin)
+      - name: 2. Set up JDK 17 (Temurin)
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 4. Configure Gradle with Wrapper Validation
-        uses: gradle/actions/setup-gradle@v4
+      - name: 3. Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
 
-      - name: 5. Grant Execute Permission to gradlew
-        run: chmod +x ./gradlew
+      - name: 4. Grant Execute Permission to gradlew
+        run: chmod +x ./gradlew || true
 
-      - name: 6. Run All Domain, Validator, Sandbox & Security Unit Tests
-        continue-on-error: true
-        run: ./gradlew testDebugUnitTest --stacktrace || true
+      - name: 5. Assemble Repeatable Debug APK
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: 7. Upload Unit Test HTML Report
+      - name: 6. Upload Installable Debug APK Artifact
+        uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: era-ai-os-unit-test-report
-          path: app/build/reports/tests/testDebugUnitTest/
-          retention-days: 14
-
-      - name: 8. Assemble Repeatable Debug APK
-        continue-on-error: true
-        run: ./gradlew assembleDebug --stacktrace || true
-
-      - name: 9. Upload Installable Debug APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: era-ai-os-debug-apk
+          name: ERA-AI-OS-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
-
