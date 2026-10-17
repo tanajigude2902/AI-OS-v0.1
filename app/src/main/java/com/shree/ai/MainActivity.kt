@@ -609,7 +609,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, Recogniti
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             IconButton(
-                                onClick = { if (isListening) stopListening() else startSpeechInput() },
+                                ,
                                 modifier = Modifier.size(42.dp).clip(CircleShape).background(if (isListening) Color(0xFF00E676).copy(alpha = 0.25f) else currentTheme.surface)
                             ) {
                                 Icon(if (isListening) Icons.Default.Mic else Icons.Default.MicOff, contentDescription = "Mic", tint = if (isListening) Color(0xFF00E676) else currentTheme.primary, modifier = Modifier.size(22.dp))
@@ -646,7 +646,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, Recogniti
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(235.dp),
-                            onClick = { if (isListening) stopListening() else startSpeechInput() }
+                            
                         ) stopListening() else startSpeechInput() }
                         )
 
@@ -739,6 +739,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener, Recogniti
             }
 
             if (showSettingsDialog) {
+                var tempPersona by remember { mutableStateOf(currentPersona) }
                 var tempKey by remember { mutableStateOf(savedKey) }
                 var tempPitch by remember { mutableFloatStateOf(voicePitch) }
                 var tempRate by remember { mutableFloatStateOf(voiceRate) }
